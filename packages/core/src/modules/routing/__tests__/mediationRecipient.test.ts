@@ -22,7 +22,7 @@ const MediationRepositoryMock = MediationRepository as jest.Mock<MediationReposi
 jest.mock('../../connections/repository/ConnectionRepository')
 const ConnectionRepositoryMock = ConnectionRepository as jest.Mock<ConnectionRepository>
 
-jest.mock('../../dids/repository/ConnectionRepository')
+jest.mock('../../dids/repository/DidRepository')
 const DidRepositoryMock = DidRepository as jest.Mock<DidRepository>
 
 jest.mock('../../../agent/EventEmitter')
