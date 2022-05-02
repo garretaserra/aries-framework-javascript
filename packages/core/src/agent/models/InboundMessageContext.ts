@@ -8,6 +8,7 @@ export interface MessageContextParams {
   connection?: ConnectionRecord
   senderKey?: Key
   recipientKey?: Key
+  sessionId?: string
 }
 
 export class InboundMessageContext<T extends AgentMessage = AgentMessage> {
@@ -15,12 +16,14 @@ export class InboundMessageContext<T extends AgentMessage = AgentMessage> {
   public connection?: ConnectionRecord
   public senderKey?: Key
   public recipientKey?: Key
+  public sessionId?: string
 
   public constructor(message: T, context: MessageContextParams = {}) {
     this.message = message
     this.recipientKey = context.recipientKey
     this.senderKey = context.senderKey
     this.connection = context.connection
+    this.sessionId = context.sessionId
   }
 
   /**

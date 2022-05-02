@@ -174,7 +174,7 @@ export class MessageSender {
       transportPriority?: TransportPriorityOptions
     }
   ) {
-    const { connection, outOfBand, payload } = outboundMessage
+    const { connection, outOfBand, payload, sessionId } = outboundMessage
     const errors: Error[] = []
 
     this.logger.debug('Send outbound message', {
@@ -182,11 +182,20 @@ export class MessageSender {
       connectionId: connection.id,
     })
 
-    // Try to send to already open session
-    const session =
-      this.transportService.findSessionByConnectionId(connection.id) ||
-      (outOfBand && this.transportService.findSessionByOutOfBandId(outOfBand.id))
+    let session: TransportSession | undefined
 
+    // TODO: extract to separate method, look at possibly not storing all fields in the session.
+    if (sessionId) {
+      session = this.transportService.findSessionById(sessionId)
+    }
+    if (!session) {
+      session = this.transportService.findSessionByConnectionId(connection.id)
+    }
+    if (!session && outOfBand) {
+      session = this.transportService.findSessionByOutOfBandId(outOfBand.id)
+    }
+
+    // Try to send to already open session
     if (session?.inboundMessage?.hasReturnRouting(payload.threadId)) {
       this.logger.debug(`Found session with return routing for message '${payload.id}' (connection '${connection.id}'`)
       try {

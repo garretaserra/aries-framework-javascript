@@ -18,7 +18,7 @@ export class TransportService {
   }
 
   public findSessionByConnectionId(connectionId: string) {
-    return Object.values(this.transportSessionTable).find((session) => session.connection?.id === connectionId)
+    return Object.values(this.transportSessionTable).find((session) => session?.connection?.id === connectionId)
   }
 
   public findSessionByOutOfBandId(outOfBandId: string) {
@@ -39,7 +39,7 @@ export class TransportService {
 }
 
 interface TransportSessionTable {
-  [sessionId: string]: TransportSession
+  [sessionId: string]: TransportSession | undefined
 }
 
 export interface TransportSession {
@@ -50,4 +50,5 @@ export interface TransportSession {
   connection?: ConnectionRecord
   outOfBand?: OutOfBandRecord
   send(encryptedMessage: EncryptedMessage): Promise<void>
+  close(): Promise<void>
 }

@@ -58,7 +58,7 @@ describe('mediator establishment', () => {
 
     // Initialize mediatorReceived message
     mediatorAgent = new Agent(mediatorConfig.config, mediatorConfig.agentDependencies)
-    mediatorAgent.registerOutboundTransport(new SubjectOutboundTransport(mediatorMessages, subjectMap))
+    mediatorAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     mediatorAgent.registerInboundTransport(new SubjectInboundTransport(mediatorMessages))
     await mediatorAgent.initialize()
 
@@ -79,7 +79,7 @@ describe('mediator establishment', () => {
       },
       recipientConfig.agentDependencies
     )
-    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(recipientMessages, subjectMap))
+    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     recipientAgent.registerInboundTransport(new SubjectInboundTransport(recipientMessages))
     await recipientAgent.initialize()
 
@@ -101,7 +101,7 @@ describe('mediator establishment', () => {
 
     // Initialize sender agent
     senderAgent = new Agent(senderConfig.config, senderConfig.agentDependencies)
-    senderAgent.registerOutboundTransport(new SubjectOutboundTransport(senderMessages, subjectMap))
+    senderAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     senderAgent.registerInboundTransport(new SubjectInboundTransport(senderMessages))
     await senderAgent.initialize()
 
@@ -146,7 +146,7 @@ describe('mediator establishment', () => {
 
     // Initialize mediator
     mediatorAgent = new Agent(mediatorConfig.config, mediatorConfig.agentDependencies)
-    mediatorAgent.registerOutboundTransport(new SubjectOutboundTransport(mediatorMessages, subjectMap))
+    mediatorAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     mediatorAgent.registerInboundTransport(new SubjectInboundTransport(mediatorMessages))
     await mediatorAgent.initialize()
 
@@ -167,7 +167,7 @@ describe('mediator establishment', () => {
       },
       recipientConfig.agentDependencies
     )
-    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(recipientMessages, subjectMap))
+    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     recipientAgent.registerInboundTransport(new SubjectInboundTransport(recipientMessages))
     await recipientAgent.initialize()
 
@@ -195,13 +195,13 @@ describe('mediator establishment', () => {
       },
       recipientConfig.agentDependencies
     )
-    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(recipientMessages, subjectMap))
+    recipientAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     recipientAgent.registerInboundTransport(new SubjectInboundTransport(recipientMessages))
     await recipientAgent.initialize()
 
     // Initialize sender agent
     senderAgent = new Agent(senderConfig.config, senderConfig.agentDependencies)
-    senderAgent.registerOutboundTransport(new SubjectOutboundTransport(senderMessages, subjectMap))
+    senderAgent.registerOutboundTransport(new SubjectOutboundTransport(subjectMap))
     senderAgent.registerInboundTransport(new SubjectInboundTransport(senderMessages))
     await senderAgent.initialize()
 
