@@ -76,6 +76,7 @@ describe('mediator establishment', () => {
         mediatorConnectionsInvite: mediatorOutOfBandRecord.outOfBandMessage.toUrl({
           domain: 'https://example.com/ssi',
         }),
+        mediatorPickupStrategy: MediatorPickupStrategy.PickUpV1,
       },
       recipientConfig.agentDependencies
     )
@@ -97,7 +98,6 @@ describe('mediator establishment', () => {
     expect(recipientMediatorConnection).toBeConnectedWith(mediatorRecipientConnection!)
 
     expect(recipientMediator?.state).toBe(MediationState.Granted)
-    expect(recipientMediator?.pickupStrategy).toBe(MediatorPickupStrategy.Explicit)
 
     // Initialize sender agent
     senderAgent = new Agent(senderConfig.config, senderConfig.agentDependencies)
@@ -166,6 +166,7 @@ describe('mediator establishment', () => {
         mediatorConnectionsInvite: mediatorOutOfBandRecord.outOfBandMessage.toUrl({
           domain: 'https://example.com/ssi',
         }),
+        mediatorPickupStrategy: MediatorPickupStrategy.PickUpV1,
       },
       recipientConfig.agentDependencies
     )
@@ -194,6 +195,7 @@ describe('mediator establishment', () => {
         mediatorConnectionsInvite: mediatorOutOfBandRecord.outOfBandMessage.toUrl({
           domain: 'https://example.com/ssi',
         }),
+        mediatorPickupStrategy: MediatorPickupStrategy.PickUpV1,
       },
       recipientConfig.agentDependencies
     )

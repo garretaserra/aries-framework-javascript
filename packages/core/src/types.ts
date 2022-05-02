@@ -70,6 +70,7 @@ export interface InitConfig {
   clearDefaultMediator?: boolean
   mediatorPollingInterval?: number
   mediatorPickupStrategy?: MediatorPickupStrategy
+  maximumMessagePickup?: number
 
   useLegacyDidSovPrefix?: boolean
   connectionImageUrl?: string

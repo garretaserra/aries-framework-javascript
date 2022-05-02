@@ -18,6 +18,7 @@ import {
   AutoAcceptProof,
   ProofEventTypes,
 } from '../src/modules/proofs'
+import { MediatorPickupStrategy } from '../src/modules/routing'
 import { LinkedAttachment } from '../src/utils/LinkedAttachment'
 import { uuid } from '../src/utils/uuid'
 
@@ -219,6 +220,7 @@ describe('Present Proof', () => {
       mediatorConnectionsInvite: faberMediationOutOfBandRecord.outOfBandMessage.toUrl({
         domain: 'https://example.com',
       }),
+      mediatorPickupStrategy: MediatorPickupStrategy.PickUpV1,
     })
 
     const aliceConfig = getBaseConfig(`Connectionless proofs with mediator Alice-${unique}`, {
@@ -226,6 +228,7 @@ describe('Present Proof', () => {
       mediatorConnectionsInvite: aliceMediationOutOfBandRecord.outOfBandMessage.toUrl({
         domain: 'https://example.com',
       }),
+      mediatorPickupStrategy: MediatorPickupStrategy.PickUpV1,
     })
 
     const faberAgent = new Agent(faberConfig.config, faberConfig.agentDependencies)
