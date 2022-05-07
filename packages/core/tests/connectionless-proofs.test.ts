@@ -8,7 +8,7 @@ import { SubjectOutboundTransport } from '../../../tests/transport/SubjectOutbou
 import { Agent } from '../src/agent/Agent'
 import { Attachment, AttachmentData } from '../src/decorators/attachment/Attachment'
 import { HandshakeProtocol } from '../src/modules/connections'
-
+import { V1CredentialPreview } from '../src/modules/credentials/protocol/v1/V1CredentialPreview'
 import {
   PredicateType,
   ProofState,
@@ -31,7 +31,6 @@ import {
   waitForProofRecordSubject,
 } from './helpers'
 import testLogger from './logger'
-import { V1CredentialPreview } from '../src/modules/credentials/protocol/v1/V1CredentialPreview'
 
 describe('Present Proof', () => {
   let agents: Agent[]
