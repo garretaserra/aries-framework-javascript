@@ -50,7 +50,7 @@ import { AutoAcceptCredential } from '../src/modules/credentials/CredentialAutoA
 import { DidCommV1Service, DidKey, Key } from '../src/modules/dids'
 import { OutOfBandRole } from '../src/modules/oob/domain/OutOfBandRole'
 import { OutOfBandState } from '../src/modules/oob/domain/OutOfBandState'
-import { OutOfBandMessage } from '../src/modules/oob/messages'
+import { OutOfBandInvitation } from '../src/modules/oob/messages'
 import { OutOfBandRecord } from '../src/modules/oob/repository'
 import { LinkedAttachment } from '../src/utils/LinkedAttachment'
 import { uuid } from '../src/utils/uuid'
@@ -261,13 +261,13 @@ export function getMockOutOfBand({
       }),
     ],
   }
-  const outOfBandMessage = new OutOfBandMessage(options)
+  const outOfBandInvitation = new OutOfBandInvitation(options)
   const outOfBandRecord = new OutOfBandRecord({
     did: did || 'test-did',
     mediatorId,
     role: role || OutOfBandRole.Receiver,
     state: state || OutOfBandState.Initial,
-    outOfBandMessage: outOfBandMessage,
+    outOfBandInvitation: outOfBandInvitation,
   })
   return outOfBandRecord
 }
@@ -277,7 +277,7 @@ export async function makeConnection(agentA: Agent, agentB: Agent) {
     handshakeProtocols: [HandshakeProtocol.Connections],
   })
 
-  let { connectionRecord: agentBConnection } = await agentB.oob.receiveInvitation(agentAOutOfBand.outOfBandMessage)
+  let { connectionRecord: agentBConnection } = await agentB.oob.receiveInvitation(agentAOutOfBand.outOfBandInvitation)
 
   agentBConnection = await agentB.connections.returnWhenIsConnected(agentBConnection!.id)
   let agentAConnection = await agentA.connections.findByOutOfBandId(agentAOutOfBand.id)

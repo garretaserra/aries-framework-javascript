@@ -52,7 +52,7 @@ describe('connections', () => {
       multiUseInvitation: true,
     })
 
-    const invitation = faberOutOfBandRecord.outOfBandMessage
+    const invitation = faberOutOfBandRecord.outOfBandInvitation
     const invitationUrl = invitation.toUrl({ domain: 'https://example.com' })
 
     // Create first connection
@@ -108,7 +108,7 @@ describe('connections', () => {
       multiUseInvitation: true,
     })
 
-    const invitation = faberOutOfBandRecord.outOfBandMessage
+    const invitation = faberOutOfBandRecord.outOfBandInvitation
     const invitationUrl = invitation.toUrl({ domain: 'https://example.com' })
 
     // Create first connection
