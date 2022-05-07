@@ -8,7 +8,7 @@ import { SubjectOutboundTransport } from '../../../tests/transport/SubjectOutbou
 import { Agent } from '../src/agent/Agent'
 import { Attachment, AttachmentData } from '../src/decorators/attachment/Attachment'
 import { HandshakeProtocol } from '../src/modules/connections'
-import { CredentialPreview } from '../src/modules/credentials'
+
 import {
   PredicateType,
   ProofState,
@@ -31,6 +31,7 @@ import {
   waitForProofRecordSubject,
 } from './helpers'
 import testLogger from './logger'
+import { V1CredentialPreview } from '../src/modules/credentials/protocol/v1/V1CredentialPreview'
 
 describe('Present Proof', () => {
   let agents: Agent[]
@@ -179,7 +180,7 @@ describe('Present Proof', () => {
   test('Faber starts with connection-less proof requests to Alice with auto-accept enabled and both agents having a mediator', async () => {
     testLogger.test('Faber sends presentation request to Alice')
 
-    const credentialPreview = CredentialPreview.fromRecord({
+    const credentialPreview = V1CredentialPreview.fromRecord({
       name: 'John',
       age: '99',
     })

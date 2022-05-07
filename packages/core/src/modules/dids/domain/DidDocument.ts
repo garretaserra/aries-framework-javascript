@@ -1,10 +1,11 @@
 import type { DidDocumentService } from './service'
 
-import { Expose, Transform, Type } from 'class-transformer'
-import { IsArray, IsString, ValidateNested } from 'class-validator'
+import { Expose, Type } from 'class-transformer'
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator'
 
 import { KeyType } from '../../../crypto'
 import { JsonTransformer } from '../../../utils/JsonTransformer'
+import { IsStringOrStringArray } from '../../../utils/transformers'
 
 import { Key } from './Key'
 import { getKeyDidMappingByVerificationMethod } from './key-type'
@@ -19,7 +20,7 @@ type DidPurpose =
   | 'capabilityDelegation'
 
 interface DidDocumentOptions {
-  context?: string[]
+  context?: string | string[]
   id: string
   alsoKnownAs?: string[]
   controller?: string[]
@@ -34,69 +35,75 @@ interface DidDocumentOptions {
 
 export class DidDocument {
   @Expose({ name: '@context' })
-  @IsArray()
-  @Transform((o) => (typeof o.value === 'string' ? [o.value] : o.value), { toClassOnly: true })
-  public context = ['https://w3id.org/did/v1']
+  @IsStringOrStringArray()
+  public context: string | string[] = ['https://w3id.org/did/v1']
 
   @IsString()
   public id!: string
 
   @IsArray()
   @IsString({ each: true })
-  public alsoKnownAs: string[] = []
+  @IsOptional()
+  public alsoKnownAs?: string[]
 
-  @IsArray()
-  @IsString({ each: true })
-  @Transform((o) => (typeof o.value === 'string' ? [o.value] : o.value), { toClassOnly: true })
-  public controller: string[] = []
+  @IsStringOrStringArray()
+  @IsOptional()
+  public controller?: string | string[]
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => VerificationMethod)
-  public verificationMethod: VerificationMethod[] = []
+  @IsOptional()
+  public verificationMethod?: VerificationMethod[]
 
   @IsArray()
   @ServiceTransformer()
-  public service: DidDocumentService[] = []
+  @IsOptional()
+  public service?: DidDocumentService[]
 
   @IsArray()
   @VerificationMethodTransformer()
   @IsStringOrVerificationMethod({ each: true })
-  public authentication: Array<string | VerificationMethod> = []
+  @IsOptional()
+  public authentication?: Array<string | VerificationMethod>
 
   @IsArray()
   @VerificationMethodTransformer()
   @IsStringOrVerificationMethod({ each: true })
-  public assertionMethod: Array<string | VerificationMethod> = []
+  @IsOptional()
+  public assertionMethod?: Array<string | VerificationMethod>
 
   @IsArray()
   @VerificationMethodTransformer()
   @IsStringOrVerificationMethod({ each: true })
-  public keyAgreement: Array<string | VerificationMethod> = []
+  @IsOptional()
+  public keyAgreement?: Array<string | VerificationMethod>
 
   @IsArray()
   @VerificationMethodTransformer()
   @IsStringOrVerificationMethod({ each: true })
-  public capabilityInvocation: Array<string | VerificationMethod> = []
+  @IsOptional()
+  public capabilityInvocation?: Array<string | VerificationMethod>
 
   @IsArray()
   @VerificationMethodTransformer()
   @IsStringOrVerificationMethod({ each: true })
-  public capabilityDelegation: Array<string | VerificationMethod> = []
+  @IsOptional()
+  public capabilityDelegation?: Array<string | VerificationMethod>
 
   public constructor(options: DidDocumentOptions) {
     if (options) {
       this.context = options.context ?? this.context
       this.id = options.id
-      this.alsoKnownAs = options.alsoKnownAs ?? this.alsoKnownAs
-      this.controller = options.controller ?? this.controller
-      this.verificationMethod = options.verificationMethod ?? this.verificationMethod
-      this.service = options.service ?? this.service
-      this.authentication = options.authentication ?? this.authentication
-      this.assertionMethod = options.assertionMethod ?? this.assertionMethod
-      this.keyAgreement = options.keyAgreement ?? this.keyAgreement
-      this.capabilityInvocation = options.capabilityInvocation ?? this.capabilityInvocation
-      this.capabilityDelegation = options.capabilityDelegation ?? this.capabilityDelegation
+      this.alsoKnownAs = options.alsoKnownAs
+      this.controller = options.controller
+      this.verificationMethod = options.verificationMethod
+      this.service = options.service
+      this.authentication = options.authentication
+      this.assertionMethod = options.assertionMethod
+      this.keyAgreement = options.keyAgreement
+      this.capabilityInvocation = options.capabilityInvocation
+      this.capabilityDelegation = options.capabilityDelegation
     }
   }
 
@@ -104,7 +111,7 @@ export class DidDocument {
     // TODO: once we use JSON-LD we should use that to resolve references in did documents.
     // for now we check whether the key id ends with the keyId.
     // so if looking for #123 and key.id is did:key:123#123, it is valid. But #123 as key.id is also valid
-    const verificationMethod = this.verificationMethod.find((key) => key.id.endsWith(keyId))
+    const verificationMethod = this.verificationMethod?.find((key) => key.id.endsWith(keyId))
 
     if (!verificationMethod) {
       throw new Error(`Unable to locate verification method with id '${keyId}'`)
@@ -143,7 +150,7 @@ export class DidDocument {
    * @param type The type of service(s) to query.
    */
   public getServicesByType<S extends DidDocumentService = DidDocumentService>(type: string): S[] {
-    return this.service.filter((service) => service.type === type) as S[]
+    return (this.service?.filter((service) => service.type === type) ?? []) as S[]
   }
 
   /**
@@ -154,7 +161,7 @@ export class DidDocument {
   public getServicesByClassType<S extends DidDocumentService = DidDocumentService>(
     classType: new (...args: never[]) => S
   ): S[] {
-    return this.service.filter((service) => service instanceof classType) as S[]
+    return (this.service?.filter((service) => service instanceof classType) ?? []) as S[]
   }
 
   /**
@@ -163,7 +170,7 @@ export class DidDocument {
    */
   public get didCommServices(): Array<IndyAgentService | DidCommV1Service> {
     const didCommServiceTypes = [IndyAgentService.type, DidCommV1Service.type]
-    const services = this.service.filter((service) => didCommServiceTypes.includes(service.type)) as Array<
+    const services = (this.service?.filter((service) => didCommServiceTypes.includes(service.type)) ?? []) as Array<
       IndyAgentService | DidCommV1Service
     >
 
