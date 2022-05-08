@@ -238,6 +238,8 @@ export function getMockOutOfBand({
   mediatorId,
   role,
   state,
+  reusable,
+  reuseConnectionId,
 }: {
   label?: string
   serviceEndpoint?: string
@@ -246,6 +248,8 @@ export function getMockOutOfBand({
   recipientKeys?: string[]
   role?: OutOfBandRole
   state?: OutOfBandState
+  reusable?: boolean
+  reuseConnectionId?: string
 } = {}) {
   const options = {
     label: label ?? 'label',
@@ -270,6 +274,8 @@ export function getMockOutOfBand({
     role: role || OutOfBandRole.Receiver,
     state: state || OutOfBandState.Initial,
     outOfBandInvitation: outOfBandInvitation,
+    reusable,
+    reuseConnectionId,
   })
   return outOfBandRecord
 }
@@ -282,7 +288,7 @@ export async function makeConnection(agentA: Agent, agentB: Agent) {
   let { connectionRecord: agentBConnection } = await agentB.oob.receiveInvitation(agentAOutOfBand.outOfBandInvitation)
 
   agentBConnection = await agentB.connections.returnWhenIsConnected(agentBConnection!.id)
-  let agentAConnection = await agentA.connections.findByOutOfBandId(agentAOutOfBand.id)
+  let [agentAConnection] = await agentA.connections.findAllByOutOfBandId(agentAOutOfBand.id)
   agentAConnection = await agentA.connections.returnWhenIsConnected(agentAConnection!.id)
 
   return [agentAConnection, agentBConnection]
